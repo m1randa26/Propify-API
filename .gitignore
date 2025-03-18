@@ -1,0 +1,26 @@
+# Archivos de Python
+*.pyc
+*.pyo
+__pycache__/
+
+# Entorno virtual (Si usas venv)
+venv/
+env/
+
+# Variables de entorno (No subir credenciales)
+.env
+
+# Base de datos SQLite (Si alguna vez usas SQLite en lugar de MySQL)
+db.sqlite3
+
+# Archivos generados por Django
+*.log
+staticfiles/
+media/
+
+# Archivos de configuración de editores de código
+.vscode/
+.idea/
+
+# Archivos de dependencias de pip
+pip-wheel-metadata/
