@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         return value
         
 class PropertySerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     
     class Meta:
         model = Property
