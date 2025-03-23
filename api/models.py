@@ -28,13 +28,15 @@ class User(models.Model):
         max_length=6,
         choices=Gender.choices,
     )
-    age = models.IntegerField()
+    age = models.IntegerField(
+        validators=[MinValueValidator(18), MaxValueValidator(100)]
+    )
     username = models.CharField(max_length=30, unique=True)
     password = models.CharField(max_length=128)
     
     # Password Hashing
     def save(self, *args, **kwargs):
-        if self._state.adding or self.password != User.objects.get(pk=self.pk).password:
+        if self._state.adding or not self.pk:
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
     
@@ -72,8 +74,12 @@ class RentalHistory(models.Model):
     end_date = models.DateField()
     
     def clean(self):
-        if self.end_date < self.start_date:
+        if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError('End date cannot be before start date')
+        
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
     
     review = models.CharField(max_length=255)
     rating = models.DecimalField(
@@ -81,5 +87,5 @@ class RentalHistory(models.Model):
         decimal_places=1,
         validators=[MinValueValidator(1.0), MaxValueValidator(5.0)]
     )
-    property_rent = models.ForeignKey(Property, on_delete=models.CASCADE)
+    property_rent = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='rental_history')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
