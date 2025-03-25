@@ -84,6 +84,8 @@ REST_FRAMEWORK = {
     )
 }
 
+AUTH_USER_MODEL = 'api.User'
+
 WSGI_APPLICATION = 'propify_api.wsgi.application'
 
 

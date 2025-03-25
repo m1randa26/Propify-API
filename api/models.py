@@ -2,9 +2,10 @@ from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-class User(models.Model):
+class User(AbstractUser):
     
     # Definition of user types
     class UserRoles(models.TextChoices):
@@ -16,14 +17,11 @@ class User(models.Model):
         FEMALE = 'FEMALE', 'Female'
     
     # AutoField -> Auto increment value
-    user_id = models.AutoField(primary_key=True)
     role = models.CharField(
         max_length=3,
         choices=UserRoles.choices,
         default=UserRoles.USER,
     )
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
     gender = models.CharField(
         max_length=6,
         choices=Gender.choices,
@@ -31,18 +29,6 @@ class User(models.Model):
     age = models.IntegerField(
         validators=[MinValueValidator(18), MaxValueValidator(100)]
     )
-    username = models.CharField(max_length=30, unique=True)
-    password = models.CharField(max_length=128)
-    
-    # Password Hashing
-    def save(self, *args, **kwargs):
-        if self._state.adding or not self.pk:
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
-    
-    def check_password(self, raw_password):
-        return check_password(raw_password, self.password)
-    
     picture_profile = models.URLField()
     registration_date = models.DateField(auto_now_add=True)
     location = models.CharField(max_length=80)
