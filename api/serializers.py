@@ -6,7 +6,25 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = '__all__'
+        fields = [
+            'id',
+            'role',
+            'first_name',
+            'last_name',
+            'username',
+            'age',
+            'location',
+            'password',
+        ]
+        # ¿MAYOR TIEMPO EN REQUEST?
+        extra_kwargs = {
+            'first_name': {'required': True},
+            'last_name': {'required': True},
+            'username': {'required': True},
+            'gender': {'required': True},
+            'age': {'required': True},
+            'location': {'required': True},
+        }
         
     def create(self, validated_data):
         # Hash de contraseña antes de guardar

@@ -29,7 +29,7 @@ class User(AbstractUser):
     age = models.IntegerField(
         validators=[MinValueValidator(18), MaxValueValidator(100)]
     )
-    picture_profile = models.URLField()
+    picture_profile = models.URLField(blank=True, null=True)
     registration_date = models.DateField(auto_now_add=True)
     location = models.CharField(max_length=80)
     
