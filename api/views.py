@@ -5,6 +5,7 @@ from .models import *
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from .permissions import IsOwner
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -26,7 +27,10 @@ class PropertyViewSet(viewsets.ModelViewSet):
     serializer_class = PropertySerializer
     renderer_classes = [JSONRenderer]
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
+    
+    def get_queryset(self):
+        return Property.objects.filter(user = self.request.user)
     
     
 class RentalHistoryViewSet(viewsets.ModelViewSet):
