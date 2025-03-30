@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=False)
     
     class Meta:
         model = User
@@ -30,6 +30,11 @@ class UserSerializer(serializers.ModelSerializer):
         # Hash de contraseña antes de guardar
         validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            validated_data['password'] = make_password(validated_data['password'])
+        return super().update(instance, validated_data)
     
     def validate_age(self, value):
         if value < 18:
